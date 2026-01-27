@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "id": "nivel-5",
+    "nombre": "Desencripta la imagen",
+    "descripcion": "Encuentra la imagen encriptada y desencriptala probando diferentes métodos con 'hackimg'. Usa --help para ver opciones. Una vez tengas la contraseña, úsala para leer el archivo protegido 'secret.txt' con cat --pass <password>.",
+    "tiempoLimite": 240,
+    "imagePanel": true
+  },
+  "filesystem": {
+    "root": {
+      "type": "dir",
+      "children": {
+        "carpeta1": {
+          "type": "dir",
+          "children": {
+            "img1.jpg": {
+              "type": "file",
+              "size": 1024,
+              "content": "encrypted_permute.jpg"
+            }
+          }
+        },
+        "carpeta2": {
+          "type": "dir",
+          "children": {
+            "img2.jpg": {
+              "type": "file",
+              "size": 1024,
+              "content": "encrypted_xor.jpg"
+            }
+          }
+        },
+        "carpeta3": {
+          "type": "dir",
+          "children": {
+            "img3.jpg": {
+              "type": "file",
+              "size": 1024,
+              "content": "encrypted_blocks.jpg"
+            }
+          }
+        },
+        "secret.txt": {
+          "type": "file",
+          "size": 64,
+          "protected": true,
+          "password": "teamURV",
+          "content": "Bien desencriptado!"
+        }
+      }
+    }
+  },
+  "blocks": [
+    {
+      "id": "view",
+      "label": "Ver imagen",
+      "command": "view {archivo}",
+      "description": "Visualiza la imagen",
+      "inputs": [
+        {
+          "key": "archivo",
+          "placeholder": "Nombre del archivo",
+          "required": true,
+          "mode": "replace"
+        }
+      ]
+    },
+    {
+      "id": "ls",
+      "label": "Listar directorio",
+      "command": "ls",
+      "description": "Muestra archivos y carpetas"
+    },
+    {
+      "id": "tree",
+      "label": "Mostrar árbol",
+      "command": "tree {ruta}",
+      "description": "Muestra la estructura de directorios en forma de árbol (ej: tree o tree carpeta)",
+      "params": [],
+      "inputs": [
+        {
+          "key": "ruta",
+          "placeholder": "Ruta opcional (ej: . o /)",
+          "required": false,
+          "mode": "replace"
+        }
+      ]
+    },
+    {
+      "id": "cd",
+      "label": "Cambiar directorio",
+      "command": "cd {carpeta}",
+      "description": "Entra a la carpeta indicada. Usa '..' para subir al directorio padre (ej: cd ..)",
+      "params": [],
+      "inputs": [
+        {
+          "key": "carpeta",
+          "placeholder": "Nombre de la carpeta o '..'",
+          "required": true,
+          "mode": "replace"
+        }
+      ]
+    },
+    {
+      "id": "cat-prot",
+      "label": "Leer protegido",
+      "command": "cat {archivo} --pass {password}",
+      "inputs": [
+        { "key": "archivo", "placeholder": "archivo", "required": true, "mode": "replace" },
+        { "key": "password", "placeholder": "contraseña", "required": true, "mode": "replace" }
+      ]
+    },
+    {
+      "id": "hackimg",
+      "label": "Hack imagen",
+      "command": "hackimg {archivo} --method {metodos}",
+      "description": "Intenta desencriptar la imagen con un orden de métodos (permute,xor,blocks)",
+      "inputs": [
+        { "key": "archivo", "placeholder": "archivo", "required": true, "mode": "replace" },
+        { "key": "metodos", "placeholder": "xor o blocks o permute", "required": true, "mode": "replace" }
+      ]
+    }
+  ],
+  "winCondition": {
+    "type": "stdout",
+    "mode": "contains",
+    "expected": "Bien desencriptado!"
+  },
+  "hints": [
+    { "unlockAfterSeconds": 6, "text": "Prueba con 'hackimg imgX.jpg --method permute' o 'hackimg imgX.jpg --method xor' o 'hackimg imgX.jpg --method blocks' y observa la imagen resultante." }
+  ]
+}

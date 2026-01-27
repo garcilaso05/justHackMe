@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "id": "nivel-2",
+    "nombre": "Archivo protegido",
+    "descripcion": "Encuentra la contraseña en el archivo pista.txt y úsala para leer secreto.txt.",
+    "tiempoLimite": 150
+  },
+  "filesystem": {
+    "root": {
+      "type": "dir",
+      "children": {
+        "pista.txt": {
+          "type": "file",
+          "size": 48,
+          "content": "La contraseña es: s3cret-2026"
+        },
+        "secreto.txt": {
+          "type": "file",
+          "size": 64,
+          "protected": true,
+          "password": "s3cret-2026",
+          "content": "¡Bien! Has accedido al archivo protegido."
+        }
+      }
+    }
+  },
+  "blocks": [
+    {
+      "id": "ls",
+      "label": "Listar directorio",
+      "command": "ls",
+      "description": "Muestra archivos y carpetas",
+      "params": []
+    },
+    {
+      "id": "cat",
+      "label": "Leer contenido de un archivo",
+      "command": "cat {archivo}",
+      "description": "Lee un archivo de texto",
+      "params": [],
+      "inputs": [
+        {
+          "key": "archivo",
+          "placeholder": "Nombre del archivo",
+          "required": true,
+          "mode": "replace"
+        }
+      ]
+    },
+    {
+      "id": "cat-protegido",
+      "label": "Leer archivo protegido",
+      "command": "cat {archivo} --pass {password}",
+      "description": "Necesitas escribir el archivo y la contraseña",
+      "params": [],
+      "inputs": [
+        {
+          "key": "archivo",
+          "placeholder": "Nombre del archivo",
+          "required": true,
+          "mode": "replace"
+        },
+        {
+          "key": "password",
+          "placeholder": "Contraseña",
+          "required": true,
+          "mode": "replace"
+        }
+      ]
+    }
+  ],
+  "winCondition": {
+    "type": "stdout",
+    "mode": "contains",
+    "expected": "archivo protegido"
+  },
+  "hints": [
+    {
+      "unlockAfterSeconds": 8,
+      "text": "Busca un archivo que contenga la contraseña."
+    },
+    {
+      "unlockAfterSeconds": 20,
+      "text": "El bloque protegido necesita el nombre del archivo y la contraseña."
+    }
+  ]
+}

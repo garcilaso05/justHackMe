@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "id": "nivel-1",
+    "nombre": "Explora la base",
+    "descripcion": "Descubre qué archivos hay en el directorio inicial y muestra el contenido de leeme.txt.",
+    "tiempoLimite": 120
+  },
+  "filesystem": {
+    "root": {
+      "type": "dir",
+      "children": {
+        "leeme.txt": {
+          "type": "file",
+          "size": 64,
+          "content": "Bienvenido a justHackMe. Tu misión es aprender comandos básicos."
+        },
+        "investigame": {
+          "type": "dir",
+          "children": {
+            "programador.txt": {
+              "type": "file",
+              "size": 32,
+              "content": "rogergarciadoncel (CodeURV)"
+            }
+          }
+        }
+      }
+    }
+  },
+  "blocks": [
+    {
+      "id": "ls",
+      "label": "Listar directorio",
+      "command": "ls",
+      "description": "Muestra archivos y carpetas",
+      "params": []
+    },
+    {
+      "id": "cat",
+      "label": "Leer contenido de un archivo",
+      "command": "cat {archivo}",
+      "description": "Lee un archivo de texto",
+      "params": [],
+      "inputs": [
+        {
+          "key": "archivo",
+          "placeholder": "Nombre del archivo",
+          "required": true,
+          "mode": "replace"
+        }
+      ]
+    },
+    {
+      "id": "cd",
+      "label": "Entrar a un directorio",
+      "command": "cd {carpeta}",
+      "description": "Cambia al directorio indicado",
+      "params": [],
+      "inputs": [
+        {
+          "key": "carpeta",
+          "placeholder": "Nombre del directorio",
+          "required": true,
+          "mode": "replace"
+        }
+      ]
+    }
+  ],
+  "winCondition": {
+    "type": "stdout",
+    "mode": "contains",
+    "expected": "Bienvenido a justHackMe"
+  },
+  "hints": [
+    {
+      "unlockAfterSeconds": 10,
+      "text": "Usa el bloque 'Listar directorio' para ver qué archivos hay."
+    },
+    {
+      "unlockAfterSeconds": 15,
+      "text": "Nota: las entradas que aparecen con nombre sin extensión (por ejemplo sin '.txt') son carpetas (directorios)."
+    },
+    {
+      "unlockAfterSeconds": 25,
+      "text": "Usa el bloque de lectura y escribe leeme.txt."
+    }
+  ]
+}

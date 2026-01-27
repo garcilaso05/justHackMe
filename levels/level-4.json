@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "id": "nivel-4",
+    "nombre": "Roba la cotraseña",
+    "descripcion": "Objetivo: abre la foto proporcionada usando el bloque 'view'. El archivo en la raíz llamado 'openme.jpg' contiene el nombre real de la imagen que está en la carpeta img/. Usa el bloque 'view' para mostrarla.",
+    "tiempoLimite": 120,
+    "imagePanel": true
+  },
+  "filesystem": {
+    "root": {
+      "type": "dir",
+      "children": {
+        "stick.jpg": {
+          "type": "file",
+          "size": 32,
+          "content": "stick.jpg"
+        },
+        "privado.txt": {
+            "type": "file",
+            "size": 128,
+            "protected": true,
+            "password": "3183098",
+            "content": "Has accedido!"
+        }
+      }
+    }
+  },
+  "blocks": [
+    {
+      "id": "view",
+      "label": "Ver imagen",
+      "command": "view {archivo}",
+      "description": "Visualiza la imagen",
+      "inputs": [
+        {
+          "key": "archivo",
+          "placeholder": "Nombre del archivo",
+          "required": true,
+          "mode": "replace"
+        }
+      ]
+    },
+    {
+      "id": "ls",
+      "label": "Listar directorio",
+      "command": "ls",
+      "description": "Muestra archivos y carpetas",
+      "params": []
+    },
+    {
+      "id": "cat-protegido",
+      "label": "Leer archivo protegido",
+      "command": "cat {archivo} --pass {password}",
+      "description": "Necesitas escribir el archivo y la contraseña",
+      "params": [],
+      "inputs": [
+        {
+          "key": "archivo",
+          "placeholder": "Nombre del archivo",
+          "required": true,
+          "mode": "replace"
+        },
+        {
+          "key": "password",
+          "placeholder": "Contraseña",
+          "required": true,
+          "mode": "replace"
+        }
+      ]
+    }
+  ],
+  "winCondition": {
+    "type": "stdout",
+    "mode": "contains",
+    "expected": "Has accedido!"
+  },
+  "hints": [
+    {
+      "unlockAfterSeconds": 4,
+      "text": "Usa el bloque 'Ver imagen' con el archivo 'openme.jpg'"
+    }
+  ]
+}

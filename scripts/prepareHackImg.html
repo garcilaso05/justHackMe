@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Preparar imagen encriptada - justHackMe</title>
+    <style>
+      body { font-family: sans-serif; background: #07120a; color: #c7f9cc; padding: 1rem; }
+      .panel { background: rgba(7,20,12,0.9); padding: 1rem; border-radius: 6px; max-width: 820px; }
+      label { display:block; margin: .5rem 0 .2rem; color: #9ee6b8 }
+      input, select { padding: .4rem; width:100%; }
+      button { margin-top: .6rem; padding: .5rem 1rem; background:#22c55e; border:none; color:#022c16; font-weight:700 }
+      img.preview { max-width: 320px; margin-top: .6rem; border-radius:6px }
+    </style>
+  </head>
+  <body>
+    <div class="panel">
+      <h2>Preparar imagen encriptada</h2>
+      <p>Selecciona una imagen dentro de <code>img/</code> llamada <code>imagenEncriptada.jpg</code> (o elige otra) y escribe la contraseña que quieres insertar en la imagen. El script generará una imagen encriptada y la descargará (guárdala como <code>img/encrypted.jpg</code>).</p>
+
+      <label>Imagen base (en carpeta img/)</label>
+      <input id="src" value="imagenEncriptada.jpg" />
+
+      <label>Contraseña a incrustar</label>
+      <input id="pwd" value="opensesame" />
+
+      <label>Método a aplicar (solo uno). Elige un método o deja Aleatorio para que se seleccione uno al azar.</label>
+      <select id="mode">
+        <option value="random">Aleatorio (elige permute o xor o blocks)</option>
+        <option value="permute">permute</option>
+        <option value="xor">xor</option>
+        <option value="blocks">blocks</option>
+      </select>
+
+      <button id="generate">Generar imagen encriptada y descargar</button>
+
+      <div>
+        <h3>Preview</h3>
+        <canvas id="canvas" style="display:block; background:#000"></canvas>
+        <img id="preview" class="preview" />
+      </div>
+      <p style="color:var(--muted)">Después de descargar, mueve el fichero a <code>img/encrypted.jpg</code> (o usa el mismo nombre) y actualiza el nivel.</p>
+    </div>
+
+    <script type="module">
+      // small in-browser tool to embed text and apply simple pixel transforms
+      const srcInput = document.getElementById('src');
+      const pwdInput = document.getElementById('pwd');
+      const modeSelect = document.getElementById('mode');
+      const btn = document.getElementById('generate');
+      const canvas = document.getElementById('canvas');
+      const preview = document.getElementById('preview');
+
+      function drawTextOnCanvas(ctx, text, w, h) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        const boxH = 40;
+        ctx.fillRect(12, h - boxH - 12, w - 24, boxH);
+        ctx.fillStyle = '#fff';
+        ctx.font = '20px monospace';
+        ctx.fillText(text, 18, h - 18);
+        ctx.restore();
+      }
+
+      function permutePixels(data, width, height, key = 4999) {
+        const pixels = (data.length / 4);
+        // ensure gcd(key,pixels)=1
+        const gcd = (a,b)=>b?gcd(b,a%b):a;
+        let k = key;
+        while(gcd(k,pixels) !== 1) k += 2;
+        const copy = new Uint8ClampedArray(data);
+        for(let i=0;i<pixels;i++){
+          const j = (i * k) % pixels;
+          data[j*4+0] = copy[i*4+0];
+          data[j*4+1] = copy[i*4+1];
+          data[j*4+2] = copy[i*4+2];
+          data[j*4+3] = copy[i*4+3];
+        }
+      }
+
+      function xorColors(data, key = 73) {
+        for (let i = 0; i < data.length; i += 4) {
+          data[i] ^= key;
+          data[i+1] ^= key;
+          data[i+2] ^= key;
+        }
+      }
+
+      function blocksReorder(data, width, height, blockSize = 8) {
+        const blocksX = Math.ceil(width / blockSize);
+        const blocksY = Math.ceil(height / blockSize);
+        const total = blocksX * blocksY;
+        const copy = new Uint8ClampedArray(data);
+        for (let by=0; by<blocksY; by++){
+          for(let bx=0; bx<blocksX; bx++){
+            const srcIdx = by*blocksX + bx;
+            const dstIdx = total - 1 - srcIdx;
+            const dstBx = dstIdx % blocksX;
+            const dstBy = Math.floor(dstIdx / blocksX);
+            for(let yy=0; yy<blockSize; yy++){
+              for(let xx=0; xx<blockSize; xx++){
+                const sx = bx*blockSize + xx;
+                const sy = by*blockSize + yy;
+                const dx = dstBx*blockSize + xx;
+                const dy = dstBy*blockSize + yy;
+                if (sx>=width||sy>=height||dx>=width||dy>=height) continue;
+                const s = (sy*width+sx)*4;
+                const d = (dy*width+dx)*4;
+                data[d] = copy[s]; data[d+1]=copy[s+1]; data[d+2]=copy[s+2]; data[d+3]=copy[s+3];
+              }
+            }
+          }
+        }
+      }
+
+      async function generate() {
+        const src = srcInput.value.trim();
+        const pwd = pwdInput.value.trim();
+        if(!src) return alert('Especifica el nombre de la imagen en img/');
+        const img = new Image();
+        img.crossOrigin='anonymous';
+        img.src = `../img/${src}`;
+        await new Promise((res,rej)=>{ img.onload=res; img.onerror=()=>rej(new Error('No cargó imagen')); });
+        canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img,0,0);
+        // overlay password text as sticky
+        drawTextOnCanvas(ctx, pwd, canvas.width, canvas.height);
+        // extract data
+        const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+        // choose a single method
+        let method = modeSelect.value;
+        if (method === 'random') {
+          const base = ['permute','xor','blocks'];
+          method = base[Math.floor(Math.random() * base.length)];
+        }
+        // apply selected method only (encryption)
+        if (method === 'permute') permutePixels(imageData.data, canvas.width, canvas.height);
+        else if (method === 'xor') xorColors(imageData.data);
+        else if (method === 'blocks') blocksReorder(imageData.data, canvas.width, canvas.height);
+        // annotate chosen method in filename for convenience
+        const filename = `encrypted_${method}.jpg`;
+        ctx.putImageData(imageData,0,0);
+        const dataUrl = canvas.toDataURL('image/jpeg',0.92);
+        preview.src = dataUrl;
+        // create download link
+        const a = document.createElement('a');
+        a.href = dataUrl;
+  a.download = filename;
+        a.textContent = 'Descargar encrypted.jpg';
+        a.style.display='inline-block';
+        a.style.marginTop='8px';
+        btn.parentNode.appendChild(a);
+      }
+
+      btn.addEventListener('click', () => {
+        // remove previous link if any
+        const prev = btn.parentNode.querySelector('a[download]');
+        if (prev) prev.remove();
+        generate().catch(e=>alert(e.message));
+      });
+    </script>
+  </body>
+</html>
