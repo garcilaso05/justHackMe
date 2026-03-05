@@ -152,3 +152,13 @@ Si necesitas comandos no soportados:
 - Edita `src/modules/terminal/terminalSandbox.js`.
 - Implementa el comando en el `switch`.
 - Si toca filesystem, usa métodos en `virtualFileSystem.js`.
+
+---
+
+### Capturas
+
+<img width="1893" height="843" alt="260305_15h23m54s_screenshot" src="https://github.com/user-attachments/assets/18816675-8304-42a9-b759-82380865fb90" />
+
+<img width="393" height="407" alt="260305_15h24m47s_screenshot" src="https://github.com/user-attachments/assets/a4b8f7d6-7835-4725-a866-63d15534e410" />
+
+<img width="949" height="756" alt="260305_15h28m29s_screenshot" src="https://github.com/user-attachments/assets/d302a99e-abd1-41c9-8c3a-5d8c6725b7e6" />
