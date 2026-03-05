@@ -2,7 +2,7 @@
 
 Juego educativo modular para practicar comandos de terminal Linux con bloques drag & drop.
 
-## ✅ Qué incluye
+## Qué incluye
 
 - UI modular con bloques arrastrables, barra superior y terminal embebida.
 - Motor de juego con puntuación, tiempo y condición de victoria.
@@ -10,7 +10,7 @@ Juego educativo modular para practicar comandos de terminal Linux con bloques dr
 - Terminal sandbox con filesystem virtual.
 - Ejemplo de nivel listo para expandir.
 
-## 🗂️ Estructura de carpetas
+## Estructura de carpetas
 
 ```
 .
@@ -42,7 +42,7 @@ Juego educativo modular para practicar comandos de terminal Linux con bloques dr
 └── package.json
 ```
 
-## 🧩 Módulos
+## Módulos
 
 - `UIManager`: renderiza la vista del nivel, bloques, secuencia y pistas.
 - `GameEngine`: orquesta niveles, terminal, puntuación y timer.
@@ -50,11 +50,11 @@ Juego educativo modular para practicar comandos de terminal Linux con bloques dr
 - `VirtualFileSystem`: maneja archivos/directorios iniciales.
 - `levelLoader`: carga niveles desde JSON usando `levelManifest.json`.
 
-## 🧪 Nivel JSON de ejemplo
+## Nivel JSON de ejemplo
 
 Revisa `levels/level-1.json` como base para nuevos niveles. La estructura está documentada en `src/modules/levels/levelSchema.md`.
 
-## ▶️ Cómo ejecutar
+## Cómo ejecutar
 
 Instala Node 18+ y luego:
 
@@ -64,7 +64,7 @@ npm run dev
 
 Abre http://localhost:5173 en tu navegador.
 
-## 🧱 Cómo crear niveles nuevos (paso a paso)
+## Cómo crear niveles nuevos (paso a paso)
 
 Sigue este flujo para añadir niveles sin tocar el motor del juego.
 
@@ -152,7 +152,3 @@ Si necesitas comandos no soportados:
 - Edita `src/modules/terminal/terminalSandbox.js`.
 - Implementa el comando en el `switch`.
 - Si toca filesystem, usa métodos en `virtualFileSystem.js`.
-
-## 📝 Notas
-
-Este es un scaffold intencionalmente simple para crecer en fases.
