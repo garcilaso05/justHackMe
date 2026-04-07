@@ -1,99 +1,202 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>justHackMe - Terminal Quest</title>
-    <link rel="stylesheet" href="src/styles.css" />
-  </head>
-  <body>
-    <div id="app" class="app">
-      <header class="topbar">
-        <div class="brand">
-          <span class="logo">💻</span>
-          <div>
-            <h1>justHackMe</h1>
-            <p id="level-name">Nivel 1</p>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>justHackMe - Terminal Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- MODAL: NOMBRE DEL EQUIPO -->
+<div id="name-modal">
+  <div class="modal-box">
+    <div class="modal-logo">justHackMe</div>
+    <div class="modal-subtitle">Terminal Quest — CodeURV Edition</div>
+    <p>
+      Bienvenidos al simulador de seguridad ofensiva en entorno Linux.<br>
+      Superad los retos para demostrar vuestro dominio de la terminal.<br><br>
+      Introducid el identificador de vuestro equipo:
+    </p>
+    <input
+      id="player-name-input"
+      class="modal-input"
+      type="text"
+      maxlength="20"
+      placeholder="IDENTIFICADOR DE EQUIPO"
+      autocomplete="off"
+    />
+    <button class="btn-primary" id="start-btn" style="width:100%">
+      INICIAR SESION
+    </button>
+  </div>
+</div>
+
+<!-- OVERLAY: NIVEL SUPERADO -->
+<div id="win-overlay">
+  <div class="win-box">
+    <h2>NIVEL SUPERADO</h2>
+    <p id="win-msg">Objetivo completado. Continuad con el siguiente reto.</p>
+    <div class="win-points" id="win-points">+100</div>
+    <button class="btn-primary" id="next-level-btn">SIGUIENTE NIVEL</button>
+  </div>
+</div>
+
+<!-- OVERLAY: PANTALLA FINAL -->
+<div id="final-screen" style="display:none;">
+  <div class="final-bg-grid"></div>
+  <div class="final-content">
+    <div class="final-tux">
+      <pre class="tux-art" id="tux-art"></pre>
+    </div>
+    <div class="final-text-col">
+      <div class="final-tag">MISION COMPLETADA</div>
+      <h1 class="final-title">ACCESO TOTAL<br>CONCEDIDO</h1>
+      <p class="final-subtitle">
+        Han demostrado un dominio excepcional del entorno Linux.<br>
+        Tux, el guardian del kernel, reconoce su competencia.
+      </p>
+      <div class="final-score-block">
+        <div class="final-score-label">PUNTUACION FINAL</div>
+        <div class="final-score-value" id="final-score-val">0</div>
+        <div class="final-player-name" id="final-player-name"></div>
+      </div>
+      <div class="final-stats" id="final-stats"></div>
+      <div class="final-egg">
+        <div class="final-egg-label">NIVEL SECRETO DETECTADO</div>
+        <div class="final-egg-text">
+          Existe un ultimo reto oculto. Abrid las herramientas de desarrollador<br>
+          del navegador (F12) y ejecutad: <span class="final-cmd">creditos()</span>
         </div>
-        <div class="stats">
-          <div class="stat">
-            <span class="label">Tiempo</span>
-            <span id="level-timer">Sin límite</span>
-          </div>
-          <div class="stat">
-            <span class="label">Puntuación</span>
-            <span id="score">0</span>
-          </div>
-          <div class="stat">
-            <span class="label">Progreso</span>
-            <span id="progress">1 / 1</span>
-          </div>
-        </div>
-        <nav id="level-nav" class="level-nav" aria-label="Niveles"></nav>
-      </header>
+      </div>
+      <div class="final-credits-org">
+        Organizado por <span>CodeURV</span> — Universitat Rovira i Virgili
+      </div>
+    </div>
+  </div>
+</div>
 
-      <main class="layout-shell">
-        <aside id="sidebar" class="sidebar" aria-label="Objetivos y pistas">
-          <div class="panel-header">
-            <h2>Objetivo del nivel</h2>
-          </div>
-          <p id="level-description"></p>
-          <div class="sidebar-actions">
-            <button id="reset-level" class="ghost">Reiniciar</button>
-          </div>
-          <div class="sidebar-divider"></div>
-          <div class="panel-header">
-            <h2>Pistas</h2>
-            <button id="hint-button" class="primary">Mostrar pista</button>
-          </div>
-          <ul id="hint-list" class="hint-list"></ul>
-        </aside>
-        <button id="sidebar-handle" class="sidebar-handle" aria-label="Mostrar u ocultar panel">
-          <span class="sidebar-arrow">◀</span>
-        </button>
+<!-- APP PRINCIPAL -->
+<div id="app" style="display:none; flex-direction:column; height:100vh;">
 
-        <div class="workspace">
-          <div class="workspace-grid">
-            <section class="panel blocks" aria-label="Bloques disponibles">
-              <div class="panel-header">
-                <h2>Bloques disponibles</h2>
-                <span class="pill" id="block-count">0</span>
-              </div>
-              <div id="block-list" class="block-list"></div>
-            </section>
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="brand">
+      justHackMe
+      <span>Terminal Quest</span>
+    </div>
+    <nav class="level-nav" id="level-nav"></nav>
+    <div class="topbar-stats">
+      <div class="stat-block">
+        <div class="stat-label">Equipo</div>
+        <div class="stat-value" id="stat-player">---</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Puntos</div>
+        <div class="stat-value" id="stat-score">0</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Nivel</div>
+        <div class="stat-value" id="stat-level">1</div>
+      </div>
+    </div>
+  </header>
 
-            <section class="panel composer" aria-label="Secuencia de comandos">
-              <div class="panel-header">
-                <h2>Secuencia de comandos</h2>
-                <button id="run-sequence" class="primary">Ejecutar</button>
-              </div>
-              <div id="drop-zone" class="drop-zone">
-                <p class="empty">Arrastra bloques aquí para construir tu script.</p>
-              </div>
-            </section>
-          </div>
-    
-          <!-- Level selector moved to top nav -->
+  <!-- AREA PRINCIPAL -->
+  <div class="main-area" style="flex:1; min-height:0;">
 
-          <section class="panel terminal" aria-label="Terminal">
-            <div class="panel-header">
-              <h2>Terminal</h2>
-              <div class="terminal-actions">
-                <button id="clear-terminal" class="ghost">Limpiar</button>
-              </div>
+    <!-- COLUMNA IZQUIERDA: JUEGO -->
+    <div class="game-area">
+
+      <!-- FILA SUPERIOR: MISION + COMANDOS -->
+      <div class="content-split" style="flex:1; min-height:0;">
+
+        <!-- PANEL MISION -->
+        <div class="mission-panel">
+          <div class="panel-title">Mision activa</div>
+          <div class="mission-content">
+            <div class="mission-title" id="mission-title">Cargando...</div>
+            <div class="mission-desc"  id="mission-desc"></div>
+            <div class="objective-list" id="objective-list"></div>
+            <div class="hints-section">
+              <div class="hints-label">Pistas del sistema</div>
+              <button id="hint-btn" class="btn-ghost" style="width:100%; margin-bottom:0.5rem;">
+                Solicitar pista
+              </button>
+              <div id="hint-list"></div>
             </div>
-            <div id="terminal-output" class="terminal-output"></div>
-            <div class="terminal-input-row">
-              <input id="terminal-input" class="terminal-input" placeholder="Escribe un comando y pulsa Enter (ej: ls, view carpeta1/img1.jpg, hackimg ...)" />
+            <div style="margin-top:0.75rem; display:flex; gap:0.5rem;">
+              <button class="btn-ghost" id="reset-btn" style="font-size:0.75rem;">
+                Reiniciar nivel
+              </button>
             </div>
-          </section>
+          </div>
         </div>
-      </main>
+
+        <!-- PANEL COMANDOS -->
+        <div class="commands-panel">
+          <div class="panel-title" style="display:flex; align-items:center; justify-content:space-between;">
+            <span>Comandos disponibles</span>
+            <span style="font-size:0.7rem; color:rgba(255,77,77,0.6);" id="trap-notice"></span>
+          </div>
+          <div class="commands-inner" id="commands-inner"></div>
+        </div>
+
+      </div>
+
+      <!-- TERMINAL -->
+      <div class="terminal-wrap">
+        <div class="panel-title" style="display:flex; align-items:center; justify-content:space-between;">
+          <span>Terminal</span>
+          <button class="btn-ghost" id="clear-btn" style="font-size:0.7rem; padding:0.2rem 0.6rem;">
+            Limpiar pantalla
+          </button>
+        </div>
+        <div class="terminal-output" id="terminal-output"></div>
+        <div class="terminal-input-row">
+          <span class="t-prompt" id="t-prompt">equipo@hackme:~$</span>
+          <input
+            class="terminal-input"
+            id="terminal-input"
+            type="text"
+            placeholder="o introducid el comando directamente..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+      </div>
+
+      <!-- BARRA INFERIOR: TIEMPO + INTENTOS -->
+      <div class="bottom-bar">
+        <div class="time-label" id="time-label">Tiempo: --</div>
+        <div class="time-bar-bg">
+          <div class="time-bar-fill" id="time-bar" style="width:100%"></div>
+        </div>
+        <div class="time-label" id="attempts-label">Intentos: 0</div>
+      </div>
+
+    </div><!-- /game-area -->
+
+    <!-- COLUMNA DERECHA: RANKING -->
+    <div class="ranking-panel">
+      <div class="ranking-title">Clasificacion en tiempo real</div>
+      <div class="ranking-list" id="ranking-list">
+        <div style="color:var(--muted); font-size:0.8rem; padding:1rem; text-align:center;">
+          Conectando...
+        </div>
+      </div>
     </div>
 
-    <div id="toast" class="toast hidden"></div>
+  </div><!-- /main-area -->
 
-    <script type="module" src="src/main.js"></script>
-  </body>
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<!-- LOGICA DEL JUEGO (modulo ES) -->
+<script type="module" src="main.js"></script>
+
+</body>
 </html>

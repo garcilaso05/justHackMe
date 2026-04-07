@@ -1,0 +1,394 @@
+[
+  {
+    "id": 1,
+    "name": "Hola, Terminal",
+    "desc": "Bienvenidos al sistema. La terminal es la herramienta fundamental de cualquier especialista en seguridad. Primera mision: identificad los archivos presentes en el directorio de trabajo y leed el mensaje del sistema.",
+    "time": 120,
+    "objectives": [
+      { "text": "Listar los archivos del directorio con 'ls'", "trigger": "leeme.txt" },
+      { "text": "Leer el archivo leeme.txt con 'cat'", "trigger": "Bienvenidos a justHackMe" }
+    ],
+    "filesystem": {
+      "root": {
+        "type": "dir",
+        "children": {
+          "leeme.txt": { "type": "file", "content": "Bienvenidos a justHackMe. Vuestra mision es demostrar vuestro dominio de la terminal Linux superando una serie de retos de seguridad ofensiva." },
+          "privado": {
+            "type": "dir",
+            "children": {
+              "secreto.txt": { "type": "file", "content": "CodeURV" }
+            }
+          }
+        }
+      }
+    },
+    "commands": [
+      { "id": "ls", "label": "ls", "desc": "Lista los archivos del directorio actual", "hasInput": false },
+      { "id": "cat", "label": "cat [archivo]", "desc": "Muestra el contenido de un archivo de texto", "hasInput": true, "placeholder": "nombre del archivo" }
+    ],
+    "traps": [],
+    "win": { "type": "contains", "expected": "Bienvenidos a justHackMe" },
+    "hints": [
+      { "after": 10, "text": "Usad 'ls' para listar los archivos del directorio de trabajo actual." },
+      { "after": 25, "text": "Usad 'cat leeme.txt' para leer el contenido del archivo." }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Navegar Directorios",
+    "desc": "Los directorios estructuran el sistema de archivos. El comando 'cd' permite moverse entre ellos. Para ascender un nivel, usad 'cd ..' (con espacio). Mision: acceded a la carpeta 'documentos' y leed el informe de mision.",
+    "time": 160,
+    "objectives": [
+      { "text": "Explorar el sistema con 'ls'", "trigger": "documentos" },
+      { "text": "Acceder a la carpeta 'documentos' con 'cd documentos'", "trigger": "cd documentos" },
+      { "text": "Leer el archivo mision.txt", "trigger": "Mision completada" }
+    ],
+    "filesystem": {
+      "root": {
+        "type": "dir",
+        "children": {
+          "documentos": {
+            "type": "dir",
+            "children": {
+              "mision.txt": { "type": "file", "content": "Mision completada: han demostrado capacidad de navegacion en el sistema de archivos. Continuad con el siguiente reto." }
+            }
+          },
+          "noentres": {
+            "type": "dir",
+            "children": {
+              "trampa.txt": { "type": "file", "content": "Este directorio no contiene informacion relevante. Revisad el directorio correcto." }
+            }
+          },
+          "instrucciones.txt": { "type": "file", "content": "PROCEDIMIENTO: Para acceder a un directorio usad 'cd nombre_carpeta'.\nPara volver al directorio anterior (subir un nivel), usad 'cd ..' (con espacio entre cd y los dos puntos).\nEjemplo: si se encuentran en /documentos y ejecutan 'cd ..', regresaran a la raiz." }
+        }
+      }
+    },
+    "commands": [
+      { "id": "ls", "label": "ls", "desc": "Lista los archivos del directorio actual", "hasInput": false },
+      { "id": "cd", "label": "cd [carpeta]", "desc": "Accede a una carpeta. Usad 'cd ..' para subir un nivel", "hasInput": true, "placeholder": "carpeta (o .. para subir)" },
+      { "id": "cat", "label": "cat [archivo]", "desc": "Lee un archivo de texto", "hasInput": true, "placeholder": "nombre del archivo" },
+      { "id": "pwd", "label": "pwd", "desc": "Muestra la ruta del directorio actual", "hasInput": false }
+    ],
+    "traps": [],
+    "win": { "type": "contains", "expected": "Mision completada: han demostrado" },
+    "hints": [
+      { "after": 10, "text": "Usad 'ls' para ver los directorios disponibles." },
+      { "after": 30, "text": "Ejecutad 'cd documentos' para acceder al directorio correcto." },
+      { "after": 50, "text": "Usad 'cat mision.txt' dentro del directorio documentos." },
+      { "after": 80, "text": "RECUERDEN: para ascender un nivel siempre usad 'cd ..' (con espacio)." }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Sigue la Pista",
+    "desc": "Un archivo del sistema esta protegido con contrasena. La clave de acceso se encuentra en otro archivo del sistema. Usad 'tree' para obtener una vision global de la estructura y seguid la pista.",
+    "time": 200,
+    "objectives": [
+      { "text": "Mapear el sistema de archivos con 'tree'", "trigger": "tree" },
+      { "text": "Localizar la contrasena en pistas/clave.txt", "trigger": "etse26" },
+      { "text": "Acceder al archivo protegido con la contrasena", "trigger": "Acceso verificado" }
+    ],
+    "filesystem": {
+      "root": {
+        "type": "dir",
+        "children": {
+          "pistas": {
+            "type": "dir",
+            "children": {
+              "clave.txt": { "type": "file", "content": "La contrasena del archivo restringido es: etse26" }
+            }
+          },
+          "secreto.txt": {
+            "type": "file",
+            "protected": true,
+            "password": "etse26",
+            "content": "Acceso verificado. Han seguido correctamente la cadena de pistas. Bien ejecutado."
+          },
+          "instrucciones.txt": { "type": "file", "content": "RECORDATORIO: 'cd ..' (con espacio) asciende un directorio. 'tree' muestra toda la estructura de archivos de forma jerarquica." }
+        }
+      }
+    },
+    "commands": [
+      { "id": "ls", "label": "ls", "desc": "Lista los archivos", "hasInput": false },
+      { "id": "tree", "label": "tree", "desc": "Muestra toda la estructura jerarquica del sistema de archivos", "hasInput": false },
+      { "id": "cd", "label": "cd [carpeta]", "desc": "Accede a un directorio ('cd ..' para subir)", "hasInput": true, "placeholder": "directorio o .." },
+      { "id": "cat", "label": "cat [archivo]", "desc": "Lee un archivo", "hasInput": true, "placeholder": "archivo" },
+      { "id": "cat-pass", "label": "cat [archivo] --pass [clave]", "desc": "Lee un archivo protegido con contrasena", "hasInput": true, "placeholder": "archivo --pass contrasena", "isProtected": true }
+    ],
+    "traps": [],
+    "win": { "type": "contains", "expected": "Acceso verificado" },
+    "hints": [
+      { "after": 10, "text": "Usad 'tree' para visualizar todos los archivos y directorios de una vez." },
+      { "after": 30, "text": "Acceded al directorio 'pistas' y leed clave.txt para obtener la contrasena." },
+      { "after": 60, "text": "Ejecutad: cat secreto.txt --pass etse26" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "La Pegatina",
+    "desc": "El equipo de inteligencia ha colocado una pegatina fisica en el servidor de destino. En la carpeta 'img' encontraran una fotografia (stick.jpg). Abridla: contiene una contrasena manuscrita necesaria para desbloquear el archivo 'bloqueado.txt'.",
+    "time": 240,
+    "type": "sticker",
+    "objectives": [
+      { "text": "Explorar la carpeta img/", "trigger": "stick.jpg" },
+      { "text": "Visualizar la pegatina con 'open img/stick.jpg'", "trigger": "[IMAGEN MOSTRADA]" },
+      { "text": "Usar la contrasena de la pegatina para acceder a bloqueado.txt", "trigger": "Acceso total concedido" }
+    ],
+    "filesystem": {
+      "root": {
+        "type": "dir",
+        "children": {
+          "img": {
+            "type": "dir",
+            "children": {
+              "stick.jpg": { "type": "image", "src": "img/stick.jpg", "sticker": true, "stickerPassword": "CodeURV" }
+            }
+          },
+          "bloqueado.txt": {
+            "type": "file",
+            "protected": true,
+            "password": "CodeURV",
+            "content": "Acceso total concedido. La contrasena de la pegatina era correcta. Buen trabajo de campo."
+          },
+          "pista.txt": { "type": "file", "content": "El tecnico Javier dejo una pegatina pegada en el chasis del servidor antes de salir. Abridla con 'open img/stick.jpg'. La contrasena esta escrita a mano sobre ella." }
+        }
+      }
+    },
+    "commands": [
+      { "id": "ls", "label": "ls", "desc": "Lista archivos del directorio actual", "hasInput": false },
+      { "id": "cd", "label": "cd [carpeta]", "desc": "Accede a un directorio ('cd ..' para subir)", "hasInput": true, "placeholder": "directorio o .." },
+      { "id": "cat", "label": "cat [archivo]", "desc": "Lee un archivo de texto", "hasInput": true, "placeholder": "archivo" },
+      { "id": "open", "label": "open [imagen]", "desc": "Abre y muestra una imagen en pantalla", "hasInput": true, "placeholder": "ruta/imagen.jpg" },
+      { "id": "cat-pass", "label": "cat [archivo] --pass [clave]", "desc": "Lee un archivo protegido con contrasena", "hasInput": true, "placeholder": "archivo --pass clave", "isProtected": true }
+    ],
+    "traps": [],
+    "win": { "type": "contains", "expected": "Acceso total concedido" },
+    "hints": [
+      { "after": 15, "text": "Leed pista.txt para orientaros sobre el procedimiento." },
+      { "after": 40, "text": "Usad 'cd img' para acceder a la carpeta de imagenes y 'ls' para listar su contenido." },
+      { "after": 70, "text": "Ejecutad 'open img/stick.jpg' (desde la raiz) para visualizar la pegatina con la contrasena." },
+      { "after": 100, "text": "Con la contrasena de la pegatina: cat bloqueado.txt --pass [CONTRASENA]" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Criptografia Aplicada",
+    "desc": "El servidor almacena documentos cifrados mediante AES-256. Una imagen encriptada contiene una contrasena oculta que, una vez descifrada, les permitira acceder a un archivo clasificado. Desencriptad y utilizad la clave que encuentren.",
+    "time": 360,
+    "type": "encrypted_images",
+    "objectives": [
+      { "text": "Intentar abrir una imagen encriptada con 'open'", "trigger": "[IMAGEN ENCRIPTADA]" },
+      { "text": "Descifrar la imagen correcta con el comando 'decrypt'", "trigger": "[IMAGEN DESCIFRADA]" },
+      { "text": "Usar la clave revelada para acceder a contrato_confidencial.txt", "trigger": "Contrato validado" }
+    ],
+    "filesystem": {
+      "root": {
+        "type": "dir",
+        "children": {
+          "img": {
+            "type": "dir",
+            "children": {
+              "img1.jpg": { "type": "image", "src": "img/img1.jpg", "encrypted": true },
+              "img2.jpg": { "type": "image", "src": "img/img2.jpg", "encrypted": true, "hiddenKey": "informaticsURV" },
+              "img3.jpg": { "type": "image", "src": "img/img3.jpg", "encrypted": true }
+            }
+          },
+          "contrato_confidencial.txt": {
+            "type": "file",
+            "protected": true,
+            "password": "informaticsURV",
+            "content": "Contrato validado. Acceso al documento clasificado concedido. La criptografia simetrica ha sido superada con exito."
+          },
+          "sistema.log": { "type": "file", "content": "REGISTRO DEL SISTEMA:\n[ERROR] img/img1.jpg - Cifrado activo (AES-256)\n[ERROR] img/img2.jpg - Cifrado activo (AES-256) — contiene datos sensibles\n[ERROR] img/img3.jpg - Cifrado activo (AES-256)\n[INFO] Utilizad el comando de descifrado para recuperar el contenido. Pista: el comando comienza por 'de...'\n[INFO] Una vez obtenida la clave, usarla para acceder a contrato_confidencial.txt" },
+          "README.txt": { "type": "file", "content": "PROTOCOLO DE ACCESO:\n1. Las imagenes estan protegidas con cifrado simetrico.\n2. El comando correcto revelara el contenido real de la imagen.\n3. Una de las imagenes contiene una clave de acceso visible.\n4. Usad esa clave para desbloquear el contrato_confidencial.txt con: cat contrato_confidencial.txt --pass [clave]" }
+        }
+      }
+    },
+    "commands": [
+      { "id": "ls", "label": "ls", "desc": "Lista archivos", "hasInput": false },
+      { "id": "cd", "label": "cd [carpeta]", "desc": "Accede a un directorio ('cd ..' para subir)", "hasInput": true, "placeholder": "directorio o .." },
+      { "id": "cat", "label": "cat [archivo]", "desc": "Lee un archivo de texto", "hasInput": true, "placeholder": "archivo" },
+      { "id": "cat-pass", "label": "cat [archivo] --pass [clave]", "desc": "Lee un archivo protegido con contrasena", "hasInput": true, "placeholder": "archivo --pass clave", "isProtected": true },
+      { "id": "open", "label": "open [imagen]", "desc": "Intenta abrir una imagen", "hasInput": true, "placeholder": "ruta/imagen.jpg" },
+      { "id": "decrypt", "label": "decrypt [imagen]", "desc": "Descifra una imagen cifrada con AES-256", "hasInput": true, "placeholder": "ruta/imagen.jpg" }
+    ],
+    "traps": [],
+    "win": { "type": "contains", "expected": "Contrato validado" },
+    "hints": [
+      { "after": 15, "text": "Leed sistema.log: contiene una pista sobre el comando de descifrado y el procedimiento." },
+      { "after": 40, "text": "El comando es 'decrypt'. Probad con cada imagen del directorio img/." },
+      { "after": 80, "text": "Usad 'decrypt img/img2.jpg' para descifrar la imagen que contiene la clave." },
+      { "after": 120, "text": "Con la clave visible en la imagen, ejecutad: cat contrato_confidencial.txt --pass informaticsURV" }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Metadatos Ocultos",
+    "desc": "En el campo del analisis forense digital, la informacion critica no siempre se encuentra en el contenido visible. Los metadatos EXIF de una imagen pueden revelar coordenadas, autores o codigos secretos. Inspeccionad los archivos disponibles.",
+    "time": 280,
+    "type": "metadata",
+    "objectives": [
+      { "text": "Visualizar alguna de las imagenes con 'open'", "trigger": "[IMAGEN MOSTRADA]" },
+      { "text": "Usar 'metadata' para inspeccionar los archivos y encontrar datos GPS", "trigger": "GPS" },
+      { "text": "Verificar el codigo secreto encontrado en los metadatos", "trigger": "Coordenadas verificadas" }
+    ],
+    "filesystem": {
+      "root": {
+        "type": "dir",
+        "children": {
+          "archivos": {
+            "type": "dir",
+            "children": {
+              "imgA.jpg": {
+                "type": "image",
+                "src": "img/imgA.jpg",
+                "metadata": {
+                  "Nombre": "imgA.jpg",
+                  "Tamano": "2.4 MB",
+                  "Resolucion": "1920x1080",
+                  "Camara": "SONY-RX100",
+                  "Fecha": "2025-03-14 14:22:01",
+                  "GPS Latitud": "41.1189 N",
+                  "GPS Longitud": "1.2445 E",
+                  "Autor": "Carlos Mendez",
+                  "Comentario": "Fotografia de archivo, sin datos relevantes"
+                }
+              },
+              "imgB.jpg": {
+                "type": "image",
+                "src": "img/imgB.jpg",
+                "metadata": {
+                  "Nombre": "imgB.jpg",
+                  "Tamano": "3.1 MB",
+                  "Resolucion": "2560x1440",
+                  "Camara": "CANON-EOS-R5",
+                  "Fecha": "2025-03-18 09:15:44",
+                  "GPS Latitud": "41.3851 N",
+                  "GPS Longitud": "2.1734 E",
+                  "Autor": "Elena Rivas",
+                  "Codigo secreto": "URV26",
+                  "Nota oculta": "Coordenadas del objetivo: 41.3851, 2.1734"
+                }
+              },
+              "imgC.jpg": {
+                "type": "image",
+                "src": "img/imgC.jpg",
+                "metadata": {
+                  "Nombre": "imgC.jpg",
+                  "Tamano": "1.8 MB",
+                  "Resolucion": "1280x720",
+                  "Camara": "NIKON-Z6",
+                  "Fecha": "2025-03-22 17:43:22",
+                  "GPS Latitud": "40.4168 N",
+                  "GPS Longitud": "3.7038 W",
+                  "Autor": "Desconocido",
+                  "Comentario": "Archivo de senuelo — sin datos de interes"
+                }
+              }
+            }
+          },
+          "mision.txt": {
+            "type": "file",
+            "content": "El objetivo se encuentra en los metadatos de uno de estos archivos. La imagen en si no revela nada.\nInspeccionad los METADATOS EXIF con el comando 'metadata'. Uno de los archivos contiene un 'Codigo secreto'.\nUsad ese codigo con el sistema de verificacion:\n  verificar [codigo]\nEjemplo: verificar ALFA-00"
+          }
+        }
+      }
+    },
+    "commands": [
+      { "id": "ls", "label": "ls", "desc": "Lista archivos", "hasInput": false },
+      { "id": "cd", "label": "cd [carpeta]", "desc": "Accede a un directorio ('cd ..' para subir)", "hasInput": true, "placeholder": "directorio o .." },
+      { "id": "cat", "label": "cat [archivo]", "desc": "Lee un archivo de texto", "hasInput": true, "placeholder": "archivo" },
+      { "id": "open", "label": "open [imagen]", "desc": "Abre una imagen (no muestra metadatos)", "hasInput": true, "placeholder": "ruta/imagen.jpg" },
+      { "id": "metadata", "label": "metadata [imagen]", "desc": "Extrae y muestra los metadatos EXIF de una imagen", "hasInput": true, "placeholder": "ruta/imagen.jpg" },
+      { "id": "verificar", "label": "verificar [codigo]", "desc": "Verifica un codigo de acceso en el sistema", "hasInput": true, "placeholder": "CODIGO" }
+    ],
+    "traps": [],
+    "win": { "type": "contains", "expected": "Coordenadas verificadas" },
+    "hints": [
+      { "after": 15, "text": "Leed mision.txt para comprender el procedimiento de este reto." },
+      { "after": 40, "text": "Usad 'metadata archivos/imgB.jpg' — ahi se encuentran los datos clave." },
+      { "after": 80, "text": "El Codigo secreto es URV26. Ejecutad: verificar URV26" }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Nivel Meta: Consola del Navegador",
+    "desc": "ALERTA CRITICA: El sistema ha sido comprometido. La clave de recuperacion no se encuentra en la terminal. Ha sido inyectada en una capa de memoria externa accesible unicamente desde las herramientas de desarrollador del navegador.",
+    "time": 300,
+    "type": "meta_console",
+    "objectives": [
+      { "text": "Leer el informe de corrupcion del sistema", "trigger": "herramientas de desarrollador" },
+      { "text": "Ejecutar obtenerClaveOculta() en la consola del navegador (F12)", "trigger": "PHANTOM-X" },
+      { "text": "Introducir la clave recuperada en la terminal", "trigger": "Sistema restaurado" }
+    ],
+    "filesystem": {
+      "root": {
+        "type": "dir",
+        "children": {
+          "sistema": {
+            "type": "dir",
+            "children": {
+              "error.log": { "type": "file", "content": "CORRUPCION CRITICA DETECTADA\n=====================================\nLos archivos de clave han sido movidos a una capa de memoria\nno accesible desde esta terminal.\n\nPara recuperarlos, debeis acceder a las HERRAMIENTAS DE DESARROLLADOR\ndel navegador (tecla F12).\n\nUna vez en la consola, ejecutad:\n  obtenerClaveOculta()\n\nEsta funcion fue inyectada antes de la corrupcion del sistema." },
+              "diagnostico.txt": { "type": "file", "content": "Estado: CRITICO\nArchivos afectados: 7 de 7\nRecuperacion posible: SI (via consola externa)\nTiempo estimado: Inmediato con el procedimiento correcto." }
+            }
+          },
+          "instrucciones_emergencia.txt": { "type": "file", "content": "PROTOCOLO DE EMERGENCIA:\n1. Abrid las herramientas de desarrollador (F12 o Ctrl+Mayus+I)\n2. Haced clic en la pestana 'Console' (Consola)\n3. Escribid: obtenerClaveOculta()\n4. Copiad la clave que aparece en pantalla\n5. Regresad aqui y usadla con el comando: introducir [CLAVE]" }
+        }
+      }
+    },
+    "commands": [
+      { "id": "ls", "label": "ls", "desc": "Lista archivos", "hasInput": false },
+      { "id": "cd", "label": "cd [carpeta]", "desc": "Accede a un directorio ('cd ..' para subir)", "hasInput": true, "placeholder": "directorio o .." },
+      { "id": "cat", "label": "cat [archivo]", "desc": "Lee un archivo", "hasInput": true, "placeholder": "archivo" },
+      { "id": "introducir", "label": "introducir [clave]", "desc": "Introduce la clave obtenida de la consola del navegador", "hasInput": true, "placeholder": "la clave encontrada" }
+    ],
+    "traps": [],
+    "win": { "type": "contains", "expected": "Sistema restaurado" },
+    "hints": [
+      { "after": 15, "text": "Leed sistema/error.log para comprender que ha ocurrido." },
+      { "after": 40, "text": "Debeis abrir la consola del navegador. Pulsad F12 e id a la pestana 'Console'." },
+      { "after": 80, "text": "Escribid obtenerClaveOculta() en la consola del navegador y copiad el resultado." },
+      { "after": 120, "text": "Luego usad el comando: introducir PHANTOM-X (la clave esta en la consola)." }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Intrusion a Firebase",
+    "desc": "Mision critica. Los datos clasificados han sido exfiltrados a una base de datos remota. Utilizad el escaner de redes para detectar el servicio activo y conectaos para recuperar la informacion confidencial almacenada.",
+    "time": 400,
+    "type": "firebase_hack",
+    "objectives": [
+      { "text": "Escanear redes disponibles con 'net-scan'", "trigger": "[RED DETECTADA]" },
+      { "text": "Conectarse a la base de datos con 'db-connect hackme-db'", "trigger": "[CONEXION ESTABLECIDA]" },
+      { "text": "Completar la descarga de datos clasificados", "trigger": "20CODEURV26" }
+    ],
+    "filesystem": {
+      "root": {
+        "type": "dir",
+        "children": {
+          "red": {
+            "type": "dir",
+            "children": {
+              "redes.cfg": { "type": "file", "content": "Redes conocidas en el entorno:\n  - hackme-db     (base de datos clasificada — objetivo principal)\n  - public-wifi   (acceso publico, sin datos de interes)\n  - admin-panel   (acceso restringido — intento bloqueado)\n\nUsad 'net-scan' para detectar senales activas.\nUsad 'db-connect [nombre-red]' para iniciar la conexion." }
+            }
+          },
+          "nota.txt": { "type": "file", "content": "El analista Javier subio los datos clasificados a la base de datos remota hace 3 horas.\nNadie deberia poder acceder sin las credenciales correctas.\nSin embargo, el equipo de Lucia ha identificado una vulnerabilidad en el protocolo de autenticacion." }
+        }
+      }
+    },
+    "commands": [
+      { "id": "ls", "label": "ls", "desc": "Lista archivos", "hasInput": false },
+      { "id": "cd", "label": "cd [carpeta]", "desc": "Accede a un directorio ('cd ..' para subir)", "hasInput": true, "placeholder": "directorio o .." },
+      { "id": "cat", "label": "cat [archivo]", "desc": "Lee un archivo", "hasInput": true, "placeholder": "archivo" },
+      { "id": "net-scan", "label": "net-scan", "desc": "Escanea y lista las redes disponibles en el entorno", "hasInput": false },
+      { "id": "db-connect", "label": "db-connect [red]", "desc": "Inicia conexion a una base de datos remota", "hasInput": true, "placeholder": "nombre de la red" }
+    ],
+    "traps": [],
+    "win": { "type": "contains", "expected": "20CODEURV26" },
+    "hints": [
+      { "after": 15, "text": "Leed red/redes.cfg para identificar el objetivo de la conexion." },
+      { "after": 40, "text": "Primero ejecutad 'net-scan' para detectar las senales activas." },
+      { "after": 80, "text": "Luego usad 'db-connect hackme-db' para conectaros a la base de datos objetivo." }
+    ]
+  }
+]

@@ -1,8 +1,0 @@
-{
-  "name": "justhackme",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "node scripts/devserver.js"
-  }
-}
