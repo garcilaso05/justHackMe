@@ -3,7 +3,7 @@
     "id": 1,
     "name": "Hola, Terminal",
     "desc": "Bienvenidos al sistema. La terminal es la herramienta fundamental de cualquier especialista en seguridad. Primera mision: identificad los archivos presentes en el directorio de trabajo y leed el mensaje del sistema.",
-    "time": 120,
+    "time": 240,
     "objectives": [
       { "text": "Listar los archivos del directorio con 'ls'", "trigger": "leeme.txt" },
       { "text": "Leer el archivo leeme.txt con 'cat'", "trigger": "Bienvenidos a justHackMe" }
@@ -37,7 +37,7 @@
     "id": 2,
     "name": "Navegar Directorios",
     "desc": "Los directorios estructuran el sistema de archivos. El comando 'cd' permite moverse entre ellos. Para ascender un nivel, usad 'cd ..' (con espacio). Mision: acceded a la carpeta 'documentos' y leed el informe de mision.",
-    "time": 160,
+    "time": 300,
     "objectives": [
       { "text": "Explorar el sistema con 'ls'", "trigger": "documentos" },
       { "text": "Acceder a la carpeta 'documentos' con 'cd documentos'", "trigger": "cd documentos" },
@@ -82,7 +82,7 @@
     "id": 3,
     "name": "Sigue la Pista",
     "desc": "Un archivo del sistema esta protegido con contrasena. La clave de acceso se encuentra en otro archivo del sistema. Usad 'tree' para obtener una vision global de la estructura y seguid la pista.",
-    "time": 200,
+    "time": 400,
     "objectives": [
       { "text": "Mapear el sistema de archivos con 'tree'", "trigger": "tree" },
       { "text": "Localizar la contrasena en pistas/clave.txt", "trigger": "etse26" },
@@ -127,7 +127,7 @@
     "id": 4,
     "name": "La Pegatina",
     "desc": "El equipo de inteligencia ha colocado una pegatina fisica en el servidor de destino. En la carpeta 'img' encontraran una fotografia (stick.jpg). Abridla: contiene una contrasena manuscrita necesaria para desbloquear el archivo 'bloqueado.txt'.",
-    "time": 240,
+    "time": 500,
     "type": "sticker",
     "objectives": [
       { "text": "Explorar la carpeta img/", "trigger": "stick.jpg" },
@@ -173,8 +173,8 @@
   {
     "id": 5,
     "name": "Criptografia Aplicada",
-    "desc": "El servidor almacena documentos cifrados mediante AES-256. Una imagen encriptada contiene una contrasena oculta que, una vez descifrada, les permitira acceder a un archivo clasificado. Desencriptad y utilizad la clave que encuentren.",
-    "time": 360,
+    "desc": "El servidor almacena documentos cifrados. Una imagen encriptada contiene una contrasena oculta que, una vez descifrada, les permitira acceder a un archivo clasificado. Desencriptad y utilizad la clave que encuentren.",
+    "time": 700,
     "type": "encrypted_images",
     "objectives": [
       { "text": "Intentar abrir una imagen encriptada con 'open'", "trigger": "[IMAGEN ENCRIPTADA]" },
@@ -225,7 +225,7 @@
     "id": 6,
     "name": "Metadatos Ocultos",
     "desc": "En el campo del analisis forense digital, la informacion critica no siempre se encuentra en el contenido visible. Los metadatos EXIF de una imagen pueden revelar coordenadas, autores o codigos secretos. Inspeccionad los archivos disponibles.",
-    "time": 280,
+    "time": 600,
     "type": "metadata",
     "objectives": [
       { "text": "Visualizar alguna de las imagenes con 'open'", "trigger": "[IMAGEN MOSTRADA]" },
@@ -314,7 +314,7 @@
     "id": 7,
     "name": "Nivel Meta: Consola del Navegador",
     "desc": "ALERTA CRITICA: El sistema ha sido comprometido. La clave de recuperacion no se encuentra en la terminal. Ha sido inyectada en una capa de memoria externa accesible unicamente desde las herramientas de desarrollador del navegador.",
-    "time": 300,
+    "time": 700,
     "type": "meta_console",
     "objectives": [
       { "text": "Leer el informe de corrupcion del sistema", "trigger": "herramientas de desarrollador" },
@@ -355,7 +355,7 @@
     "id": 8,
     "name": "Intrusion a Firebase",
     "desc": "Mision critica. Los datos clasificados han sido exfiltrados a una base de datos remota. Utilizad el escaner de redes para detectar el servicio activo y conectaos para recuperar la informacion confidencial almacenada.",
-    "time": 400,
+    "time": 850,
     "type": "firebase_hack",
     "objectives": [
       { "text": "Escanear redes disponibles con 'net-scan'", "trigger": "[RED DETECTADA]" },
